@@ -1,0 +1,52 @@
+import me.imatveev.*;
+
+plugins {
+    id 'groovy'
+}
+
+group = 'me.imatveev'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    files('me.imatveev.Hello2Task.groovy')
+}
+
+dependencies {
+    implementation 'org.apache.groovy:groovy:4.0.2'
+    implementation gradleApi()
+
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+tasks.register('hello')
+        .configure {
+            group = 'hello'
+
+            doFirst {
+                print 'hello'
+            }
+            doLast {
+                print ' world'
+            }
+        }
+
+tasks.register('hello2', Hello2Task)
+
+def hello = tasks.register('hello3') {
+    group = 'hello'
+    ext.hello = 'hello '
+    ext['world'] = ' world'
+    def foo = 'Foo' //can't use in external scope!
+}
+
+print hello.get().hello
+print hello.get().ext.'world'
